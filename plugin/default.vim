@@ -13,12 +13,19 @@ let g:loaded_vim_better_default = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+" The fish shell is not very compatible to other shells and unexpectedly
+" breaks things that use 'shell'.
+if &shell =~# 'fish$'
+  set shell=/bin/bash
+endif
+
 " Neovim has set these as default
 if !has('nvim')
 
   set nocompatible
 
   syntax on                      " Syntax highlighting
+  set synmaxcol=200              " Only highlight the first 200 columns.
   filetype plugin indent on      " Automatically detect file types
   set autoindent                 " Indent at the same level of the previous line
   set autoread                   " Automatically read a file changed outside of vim
@@ -32,6 +39,7 @@ if !has('nvim')
   set laststatus=2               " Always show status line
   set mouse=a                    " Automatically enable mouse usage
   set smarttab                   " Smart tab
+  set lazyredraw                 " Only redraw when necessary.
   set ttyfast                    " Faster redrawing
   set viminfo+=!                 " Viminfo include !
   set wildmenu                   " Show list instead of just completing
@@ -49,6 +57,7 @@ set nowrap         " Do not wrap long lines
 set shiftwidth=4   " Use indents of 4 spaces
 set tabstop=4      " An indentation every four columns
 set softtabstop=4  " Let backspace delete indent
+set shiftround     " >> indents to next multiple of 'shiftwidth'.
 set splitright     " Puts new vsplit windows to the right of the current
 set splitbelow     " Puts new split windows to the bottom of the current
 set autowrite      " Automatically write a file when leaving a modified buffer
@@ -74,7 +83,18 @@ set t_ut=
 set winminheight=0
 set wildmode=list:longest,full
 
-set listchars=tab:→\ ,eol:↵,trail:·,extends:↷,precedes:↶
+" tab和其他符号设置可见
+" set listchars=tab:→\ ,eol:↵,trail:·,extends:↷,precedes:↶
+if has('multi_byte') && &encoding ==# 'utf-8'
+  set list lcs =tab:>-,eol:¬,nbsp:±,trail:-,extends:→,precedes:←
+  set showbreak=⌙
+else
+  set list lcs =tab:▶\ ,eol:↩,nbsp:‡,trail:◥,extends:▶,precedes:◀
+  set showbreak=↪
+endif
+hi NonText ctermfg=18 guifg=#4a4a59
+hi SpecialKey ctermfg=18 guifg=#4a4a59
+"""""""""""""""""""""""""
 
 set whichwrap+=<,>,h,l  " Allow backspace and cursor keys to cross line boundaries
 
@@ -99,27 +119,6 @@ vmap k gk
 " (useful for handling the permission-denied error)
 command! W w !sudo tee % > /dev/null
 
-" Change cursor shape for iTerm2 on macOS {
-  " bar in Insert mode
-  " inside iTerm2
-  if $TERM_PROGRAM =~# 'iTerm'
-    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-    let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-  endif
-
-  " inside tmux
-  if exists('$TMUX') && $TERM != 'xterm-kitty'
-    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-    let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
-    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-  endif
-
-  " inside neovim
-  if has('nvim')
-    let $NVIM_TUI_ENABLE_CURSOR_SHAPE=2
-  endif
-" }
 
 if get(g:, 'vim_better_default_minimum', 0)
   finish
@@ -127,6 +126,9 @@ endif
 
 if get(g:, 'vim_better_default_backup_on', 0)
   set backup
+  set backupext=-vmbk
+  set backupskip=
+  set updatecount=100
 else
   set nobackup
   set noswapfile
@@ -150,10 +152,11 @@ set relativenumber          " Relative numbers on
 set fillchars=stl:\ ,stlnc:\ ,fold:\ ,vert:│
 
 " Annoying temporary files
-set directory=/tmp//,.
-set backupdir=/tmp//,.
+set directory=$HOME/.vim/swap/,/tmp//,.
+set backupdir=$HOME/.vim/backup/,/tmp//,.
+set viminfo     ='100,n$HOME/.vim/viminfo,/tmp//,.
 if v:version >= 703
-  set undodir=/tmp//,.
+  set undodir=$HOME/.vim/undo/,/tmp//,.
 endif
 
 highlight clear SignColumn  " SignColumn should match background
