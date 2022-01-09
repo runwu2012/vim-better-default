@@ -63,7 +63,7 @@ set splitbelow     " Puts new split windows to the bottom of the current
 set autowrite      " Automatically write a file when leaving a modified buffer
 set mousehide      " Hide the mouse cursor while typing
 set hidden         " Allow buffer switching without saving
-set t_Co=256       " Use 256 colors
+" set t_Co=256       " Use 256 colors
 set ruler          " Show the ruler
 set showcmd        " Show partial commands in status line and Selected characters/lines in visual mode
 set showmode       " Show current mode in command-line
@@ -153,11 +153,11 @@ set relativenumber          " Relative numbers on
 set fillchars=stl:\ ,stlnc:\ ,fold:\ ,vert:│
 
 " Annoying temporary files
-set directory=$HOME/.vim/swap/,/tmp//,.
-set backupdir=$HOME/.vim/backup/,/tmp//,.
-set viminfo     ='100,n$HOME/.vim/viminfo,/tmp//,.
+set directory=$HOME/.vim/swap/
+set backupdir=$HOME/.vim/backup/
+set viminfo=<100,'100,/50,:50,h,r$TEMP:,s10,n$HOME/.vim/viminfo
 if v:version >= 703
-  set undodir=$HOME/.vim/undo/,/tmp//,.
+  set undodir=$HOME/.vim/undo/
 endif
 
 highlight clear SignColumn  " SignColumn should match background
@@ -223,8 +223,8 @@ endif
         cnoremap <C-e> <End>
         cnoremap <C-d> <Delete>
         " jj | escaping
-        inoremap jj <Esc>
-        cnoremap jj <C-c>
+        " inoremap jj <Esc>
+        " cnoremap jj <C-c>
         " Quit visual mode
         vnoremap v <Esc>
         " Move to the start of line
