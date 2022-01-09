@@ -88,6 +88,7 @@ set wildmode=list:longest,full
 if has('multi_byte') && &encoding ==# 'utf-8'
   set list lcs =tab:>-,eol:¬,nbsp:±,trail:-,extends:→,precedes:←
   set showbreak=⌙
+                                                          
 else
   set list lcs =tab:▶\ ,eol:↩,nbsp:‡,trail:◥,extends:▶,precedes:◀
   set showbreak=↪
@@ -144,8 +145,8 @@ if get(g:, 'vim_better_default_enable_folding', 1)
   set foldlevelstart=99
 endif
 
-set background=dark         " Assume dark background
-set cursorline              " Highlight current line
+" set background=dark         " Assume dark background
+" set cursorline              " Highlight current line
 set fileformats=unix,dos,mac        " Use Unix as the standard file type
 set number                  " Line numbers on
 set relativenumber          " Relative numbers on
