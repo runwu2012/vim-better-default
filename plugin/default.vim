@@ -124,7 +124,7 @@ vmap k gk
 
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
-command! W w !sudo tee % > /dev/null
+command! sudow w !sudo tee % > /dev/null
 
 
 if get(g:, 'vim_better_default_minimum', 0)
@@ -203,6 +203,8 @@ endif
       if get(g:, 'vim_better_default_basic_key_mapping', 1)
         " Add <slient> for the rhs is Ex-cmd as some GUI app, e.g., gnvim,
         " flashes when you use these mappings.
+        " Quit normal mode
+        nnoremap <silent> <Leader>Q  :qa!<CR>
         " Move to the start of line
         nnoremap H ^
         " Move to the end of line
@@ -288,15 +290,10 @@ endif
         nnoremap <Leader>wK :resize -5<CR>
         nnoremap <Leader>w= <C-W>=
         nnoremap <Leader>ws <C-W>s
-        nnoremap <Leader>w- <C-W>s
         nnoremap <Leader>wv <C-W>v
-        nnoremap <Leader>w\| <C-W>v
-        nnoremap <Leader>w2 <C-W>v
       endif
     " }
-
   endif
-
 " }
 
 let &cpo = s:save_cpo
