@@ -37,14 +37,24 @@ if !has('nvim')
   set hlsearch                   " Highlight search terms
   set incsearch                  " Find as you type search
   set laststatus=2               " Always show status line
-  set mouse=a                    " Automatically enable mouse usage
   set smarttab                   " Smart tab
   set lazyredraw                 " Only redraw when necessary.
   set ttyfast                    " Faster redrawing
   set viminfo+=!                 " Viminfo include !
   set wildmenu                   " Show list instead of just completing
-
   set ttymouse=xterm2
+  " In many terminal emulators the mouse works just fine.  By enabling it you
+  " can position the cursor, Visually select and scroll with the mouse.
+  " Only xterm can grab the mouse events when using the shift key, for other
+  " terminals use ":", select text and press Esc.
+  if has ('mouse')
+    if &term =~ 'xterm'
+      set mouse-=a
+    else
+      set mouse=nvi
+    endif
+  endif
+
 
 endif
 
