@@ -42,7 +42,6 @@ if !has('nvim')
   set ttyfast                    " Faster redrawing
   set viminfo+=!                 " Viminfo include !
   set wildmenu                   " Show list instead of just completing
-  set ttymouse=xterm2
   " In many terminal emulators the mouse works just fine.  By enabling it you
   " can position the cursor, Visually select and scroll with the mouse.
   " Only xterm can grab the mouse events when using the shift key, for other
@@ -82,6 +81,7 @@ set matchtime=5    " Show matching time
 set report=0       " Always report changed lines
 set linespace=0    " No extra spaces between rows
 set pumheight=20   " Avoid the pop up menu occupying the whole screen
+" set whichwrap+=<,>,h,l  " Allow backspace and cursor keys to cross line boundaries
 
 if !exists('g:vim_better_default_tabs_as_spaces') || g:vim_better_default_tabs_as_spaces
   set expandtab    " Tabs are spaces, not tabs
@@ -90,15 +90,11 @@ end
 " http://stackoverflow.com/questions/6427650/vim-in-tmux-background-color-changes-when-paging/15095377#15095377
 set t_ut=
 
-set winminheight=0
-set wildmode=list:longest,full
-
 " tab和其他符号设置可见
 " set listchars=tab:→\ ,eol:↵,trail:·,extends:↷,precedes:↶
 if has('multi_byte') && &encoding ==# 'utf-8'
   set list lcs =tab:>-,eol:¬,nbsp:±,trail:-,extends:→,precedes:←
   set showbreak=⌙
-                                                          
 else
   set list lcs =tab:▶\ ,eol:↩,nbsp:‡,trail:◥,extends:▶,precedes:◀
   set showbreak=↪
@@ -107,8 +103,8 @@ hi NonText ctermfg=18 guifg=#4a4a59
 hi SpecialKey ctermfg=18 guifg=#4a4a59
 """""""""""""""""""""""""
 
-set whichwrap+=<,>,h,l  " Allow backspace and cursor keys to cross line boundaries
-
+set winminheight=0
+set wildmode=list:longest,full
 set termencoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
@@ -155,7 +151,6 @@ if get(g:, 'vim_better_default_enable_folding', 1)
   set foldlevelstart=99
 endif
 
-" set background=dark         " Assume dark background
 " set cursorline              " Highlight current line
 set fileformats=unix,dos,mac        " Use Unix as the standard file type
 set number                  " Line numbers on
@@ -173,6 +168,7 @@ endif
 highlight clear SignColumn  " SignColumn should match background
 " highlight clear LineNr      " Current line number row will have same background color in relative mode
 
+"设置vim的剪贴板和系统剪贴板同步
 if has('unnamedplus')
   set clipboard=unnamedplus,unnamed
 else
@@ -207,60 +203,32 @@ endif
       if get(g:, 'vim_better_default_basic_key_mapping', 1)
         " Add <slient> for the rhs is Ex-cmd as some GUI app, e.g., gnvim,
         " flashes when you use these mappings.
-        " Quit normal mode
-        nnoremap <silent> <Leader>q  :q<CR>
-        nnoremap <silent> <Leader>Q  :qa!<CR>
-        " Move half page faster
-        nnoremap <Leader>d  <C-d>
-        nnoremap <Leader>u  <C-u>
-        " Insert mode shortcut
-        inoremap <C-h> <BS>
-        inoremap <C-j> <Down>
-        inoremap <C-k> <Up>
-        inoremap <C-b> <Left>
-        inoremap <C-f> <Right>
-        " Bash like
-        inoremap <C-a> <Home>
-        inoremap <C-e> <End>
-        inoremap <C-d> <Delete>
-        " Command mode shortcut
-        cnoremap <C-h> <BS>
-        cnoremap <C-j> <Down>
-        cnoremap <C-k> <Up>
-        cnoremap <C-b> <Left>
-        cnoremap <C-f> <Right>
-        cnoremap <C-a> <Home>
-        cnoremap <C-e> <End>
-        cnoremap <C-d> <Delete>
-        " jj | escaping
-        " inoremap jj <Esc>
-        " cnoremap jj <C-c>
-        " Quit visual mode
-        vnoremap v <Esc>
         " Move to the start of line
         nnoremap H ^
         " Move to the end of line
         nnoremap L $
-        " Redo
-        nnoremap U <C-r>
+       " Insert mode cursor movement
+        inoremap <C-h> <S-Left>
+        inoremap <C-l> <S-Right>
+        inoremap <C-j> <Down>
+        inoremap <C-k> <Up>
+        inoremap <C-a> <Home>
+        inoremap <C-e> <End>
+        " Command mode cursor movement
+        cnoremap <C-j> <Down>
+        cnoremap <C-k> <Up>
+        cnoremap <C-h> <Left>
+        cnoremap <C-l> <Right>
+        cnoremap <C-a> <Home>
+        cnoremap <C-e> <End>
         " Quick command mode
-        nnoremap <CR> :
-        " In the quickfix window, <CR> is used to jump to the error under the
-        " cursor, so undefine the mapping there.
-        autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
-        " Yank to the end of line
-        nnoremap Y y$
-        " Auto indent pasted text
-        " nnoremap p p=`]<C-o>
-        " Open shell in vim
-        if has('nvim') || has('terminal')
-          map <silent> <Leader>' :terminal<CR>
-        else
-          map <silent> <Leader>' :shell<CR>
-        endif
-        " Search result highlight countermand
+        " nnoremap <CR> :
+        " In the quickfix window, <CR> is used to jump to the error under the cursor, so undefine the mapping there.
+        " autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
+
+        " Search result highlight countermand,取消一直搜索高亮
         nnoremap <silent> <Leader>sc :nohlsearch<CR>
-        " Toggle pastemode
+        " Toggle pastemode,取消粘贴时的自动缩进,用来减少粘贴时多出的注释符号
         nnoremap <silent> <Leader>tp :setlocal paste!<CR>
       endif
     " }
