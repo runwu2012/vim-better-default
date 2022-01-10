@@ -124,7 +124,7 @@ vmap k gk
 
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
-command! sudow w !sudo tee % > /dev/null
+command! W w !sudo tee % > /dev/null
 
 
 if get(g:, 'vim_better_default_minimum', 0)
